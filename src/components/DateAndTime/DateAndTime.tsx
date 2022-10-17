@@ -15,6 +15,7 @@ const Clock: React.FC = () => {
   }, []);
   return (
     <span aria-label="date-and-time">
+      <p aria-label="date">{date.toDateString()}</p>
       <p aria-label="time">Time: {date.toLocaleTimeString()}</p>
     </span>
   );
