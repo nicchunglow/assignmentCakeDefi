@@ -14,10 +14,12 @@ const Clock: React.FC = () => {
     return cleanup;
   }, []);
   return (
-    <span aria-label="date-and-time">
-      <p aria-label="date">{date.toDateString()}</p>
-      <p aria-label="time">Time: {date.toLocaleTimeString()}</p>
-    </span>
+    <div aria-label="date-and-time" className="flex justify-center">
+      <span className="flex justify-around w-full">
+        <p aria-label="date">{date.toDateString()}</p>
+        <p aria-label="time">Time: {date.toLocaleTimeString()}</p>
+      </span>
+    </div>
   );
 };
 export default Clock;
