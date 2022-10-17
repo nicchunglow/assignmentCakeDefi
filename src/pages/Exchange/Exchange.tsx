@@ -1,7 +1,7 @@
 import React from 'react';
 import DateAndTime from 'components/DateAndTime';
 import Select from 'components/Select';
-import { supportedTokensId } from './Exchange.constant';
+import { actionList, supportedTokensId } from './Exchange.constant';
 
 const Exchange: React.FC = () => {
   return (
@@ -14,16 +14,16 @@ const Exchange: React.FC = () => {
           <h2 aria-label="receive-token-text">Token to Receive</h2>
         </span>
         <span className="flex justify-around w-full">
-          <Select
-            aria-label="swap-token-select"
-            list={supportedTokensId}
-            action="swap"
-          />
-          <Select
-            aria-label="receive-token-select"
-            list={supportedTokensId}
-            action="receive"
-          />
+          {actionList.map((action) => {
+            return (
+              <Select
+                key={`${action}-select`}
+                aria-label={`${action}-token-select`}
+                list={supportedTokensId}
+                action={action}
+              />
+            );
+          })}
         </span>
       </div>
     </div>

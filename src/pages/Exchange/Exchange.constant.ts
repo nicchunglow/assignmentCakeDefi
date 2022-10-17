@@ -5,3 +5,5 @@ export const supportedTokensId = [
   'dogecoin',
   'tether',
 ];
+
+export const actionList = ['swap', 'receive'];
