@@ -4,7 +4,10 @@ import Exchange from './pages/Exchange';
 
 const App: React.FC = () => {
   return (
-    <div className="flex justify-center" aria-label="main-app-container">
+    <div
+      className="flex justify-center items-center h-screen"
+      aria-label="main-app-container"
+    >
       <Exchange />
     </div>
   );
