@@ -41,7 +41,7 @@ const Exchange: React.FC = () => {
     if (swapAmount) {
       const delayDebounceFn = setTimeout(() => {
         getCoinData();
-      }, 2000);
+      }, 1000);
       return () => {
         clearTimeout(delayDebounceFn);
       };
@@ -63,6 +63,7 @@ const Exchange: React.FC = () => {
               onChange={swapTokenOnChange}
             />
             <input
+              aria-label="swap-input"
               placeholder={'Type how much to swap'}
               className="w-4/5 rounded-lg p-3"
               onChange={swapInputOnChange}
@@ -78,6 +79,7 @@ const Exchange: React.FC = () => {
               onChange={receiveTokenOnChange}
             />
             <input
+              aria-label="receive-input"
               placeholder={'Type how much to receive'}
               className="w-4/5 rounded-lg p-3"
               value={receiveAmount}

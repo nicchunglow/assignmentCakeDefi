@@ -15,7 +15,11 @@ const SelectToken: React.FC<SelectTokenType> = (props) => {
   const { action, list, onChange } = props;
   const optionsList = list.map((token) => {
     return (
-      <option key={`${token.id}-option`} aria-label={`${token.id}-option`}>
+      <option
+        key={`${token.id}-option`}
+        aria-label={`${props.action}-${token.id}-option`}
+        value={token.id}
+      >
         {token.symbol}
       </option>
     );
