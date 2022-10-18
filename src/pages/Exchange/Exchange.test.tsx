@@ -8,6 +8,12 @@ import { customAxios } from 'service/axios';
 const mock = new MockAdapter(customAxios);
 
 describe('Exchange', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+  afterEach(() => {
+    jest.useRealTimers();
+  });
   test('should render', () => {
     render(<Exchange />);
     const ExchangeHeaderText = screen.getByLabelText('exchange-header-text');
@@ -34,7 +40,7 @@ describe('Exchange', () => {
     expect(ExchangeReceiveTokenSelect).toBeInTheDocument();
   });
   describe('Input', () => {
-    test('should have input display BTC to ETH ', async () => {
+    test('should have change receive input display from BTC to ETH ', async () => {
       mock.onGet('/coins/bitcoin').reply(200, {
         success: true,
         market_data: {
@@ -62,6 +68,36 @@ describe('Exchange', () => {
       jest.advanceTimersByTime(1000);
       await waitFor(() => {
         expect(ReceiveInput).toHaveValue('4');
+      });
+    });
+    test('should have change swap input display from ETH to BTC ', async () => {
+      mock.onGet('/coins/ethereum').reply(200, {
+        success: true,
+        market_data: {
+          current_price: {
+            btc: 2,
+          },
+        },
+      });
+      jest.useFakeTimers();
+      render(<Exchange />);
+      const swapTokenValue = 'bitcoin';
+      const receiveTokenValue = 'ethereum';
+      const SwapSelect = screen.getByLabelText('swap-token-select');
+      const receiveSelect = screen.getByLabelText('receive-token-select');
+      userEvent.selectOptions(SwapSelect, swapTokenValue);
+      userEvent.selectOptions(receiveSelect, receiveTokenValue);
+      await waitFor(() => {
+        expect(SwapSelect).toHaveValue(swapTokenValue);
+        expect(receiveSelect).toHaveValue(receiveTokenValue);
+      });
+      const SwapInput = screen.getByLabelText('swap-input');
+      const ReceiveInput = screen.getByLabelText('receive-input');
+      fireEvent.change(ReceiveInput, { target: { value: 2 } });
+      expect(ReceiveInput).toBeInTheDocument();
+      jest.advanceTimersByTime(1000);
+      await waitFor(() => {
+        expect(SwapInput).toHaveValue('4');
       });
     });
   });

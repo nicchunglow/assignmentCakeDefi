@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import DateAndTime from 'components/DateAndTime';
 import Select from 'components/Select';
 import { supportedTokensId } from './Exchange.constant';
@@ -7,9 +7,12 @@ import { customAxios } from 'service/axios';
 const Exchange: React.FC = () => {
   const [swapToken, setSwapToken] = useState('');
   const [receiveToken, setReceiveToken] = useState('');
+  const previousSwapAmount = useRef(0);
   const [swapAmount, setSwapAmount] = useState<number>(0);
+  const previousReceiveAmount = useRef(0);
   const [receiveAmount, setReceiveAmount] = useState<number>(0);
-
+  const swapInputCondition = swapAmount !== previousSwapAmount.current;
+  const receiveInputCondition = receiveAmount !== previousReceiveAmount.current;
   const swapTokenOnChange = (event: any) => {
     setSwapToken(event.target.value);
   };
@@ -23,30 +26,44 @@ const Exchange: React.FC = () => {
   };
 
   const receiveInputOnChange = async (event: any) => {
+    previousReceiveAmount.current = receiveAmount;
     setReceiveAmount(event.target.value);
   };
 
   const getCoinData = async () => {
-    const symbolObj = supportedTokensId.find(
-      (item) => item.id === receiveToken,
-    );
-    await customAxios.get(`/coins/${swapToken}`, {}).then((res) => {
-      const symbol = symbolObj?.symbol || '';
-      const value = swapAmount * res.data.market_data.current_price[symbol];
-      setReceiveAmount(value);
-    });
+    if (receiveAmount !== previousReceiveAmount.current) {
+      const symbolObj = supportedTokensId.find((item) => item.id === swapToken);
+      await customAxios.get(`/coins/${receiveToken}`, {}).then((res) => {
+        const symbol = symbolObj?.symbol || '';
+        const value =
+          receiveAmount * res.data.market_data.current_price[symbol];
+        setSwapAmount(value);
+        previousSwapAmount.current = value;
+      });
+    } else if (swapInputCondition) {
+      const symbolObj = supportedTokensId.find(
+        (item) => item.id === receiveToken,
+      );
+      await customAxios.get(`/coins/${swapToken}`, {}).then((res) => {
+        const symbol = symbolObj?.symbol || '';
+        const value = swapAmount * res.data.market_data.current_price[symbol];
+        setReceiveAmount(value);
+        previousReceiveAmount.current = value;
+      });
+    }
   };
 
   useEffect(() => {
-    if (swapAmount) {
-      const delayDebounceFn = setTimeout(() => {
-        getCoinData();
-      }, 1000);
-      return () => {
-        clearTimeout(delayDebounceFn);
-      };
+    if (swapInputCondition) {
+      getCoinData();
     }
   }, [swapAmount]);
+
+  useEffect(() => {
+    if (receiveInputCondition) {
+      getCoinData();
+    }
+  }, [receiveAmount]);
 
   return (
     <div className="flex justify-center rounded-lg w-2/4 h-3/4 shadow-2xl">
