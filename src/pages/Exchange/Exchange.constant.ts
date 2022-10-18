@@ -1,7 +1,7 @@
 export const supportedTokensId = [
-  'bitcoin',
-  'ethereum',
-  'defichain',
-  'dogecoin',
-  'tether',
+  { id: 'bitcoin', symbol: 'btc' },
+  { id: 'ethereum', symbol: 'eth' },
+  { id: 'defichain', symbol: 'dfi' },
+  { id: 'dogecoin', symbol: 'doge' },
+  { id: 'tether', symbol: 'usdt' },
 ];
