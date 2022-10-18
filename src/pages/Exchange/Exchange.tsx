@@ -13,6 +13,8 @@ const Exchange: React.FC = () => {
   const [receiveAmount, setReceiveAmount] = useState<number>(0);
   const swapInputCondition = swapAmount !== previousSwapAmount.current;
   const receiveInputCondition = receiveAmount !== previousReceiveAmount.current;
+  const disableInputCondition = !swapToken || !receiveToken;
+
   const swapTokenOnChange = (event: any) => {
     setSwapToken(event.target.value);
   };
@@ -72,16 +74,16 @@ const Exchange: React.FC = () => {
   };
 
   useEffect(() => {
-    if (swapInputCondition && swapAmount) {
+    if (swapInputCondition && swapAmount && swapToken) {
       getCoinData();
     }
-  }, [swapAmount]);
+  }, [swapAmount, swapToken]);
 
   useEffect(() => {
-    if (receiveInputCondition && receiveAmount) {
+    if (receiveInputCondition && receiveAmount && receiveToken) {
       getCoinData();
     }
-  }, [receiveAmount]);
+  }, [receiveAmount, receiveToken]);
 
   return (
     <div className="flex justify-center rounded-lg w-2/4 h-3/4 shadow-2xl">
@@ -98,6 +100,7 @@ const Exchange: React.FC = () => {
               onChange={swapTokenOnChange}
             />
             <input
+              disabled={disableInputCondition}
               aria-label="swap-input"
               placeholder={'Type how much to swap'}
               className="w-4/5 rounded-lg p-3"
@@ -114,6 +117,7 @@ const Exchange: React.FC = () => {
               onChange={receiveTokenOnChange}
             />
             <input
+              disabled={disableInputCondition}
               aria-label="receive-input"
               placeholder={'Type how much to receive'}
               className="w-4/5 rounded-lg p-3"
