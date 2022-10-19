@@ -16,6 +16,13 @@ const Exchange: React.FC = () => {
   const swapInputCondition = swapAmount !== previousSwapAmount.current;
   const receiveInputCondition = receiveAmount !== previousReceiveAmount.current;
   const disableInputCondition = !swapToken || !receiveToken;
+  const conversionSwapSymbol = supportedTokensId
+    .find((token) => token.id === swapToken)
+    ?.symbol.toUpperCase();
+  const conversionReceiveSymbol = supportedTokensId
+    .find((token) => token.id === receiveToken)
+    ?.symbol.toUpperCase();
+
   const conversionPrice =
     swapAmount > 0 &&
     receiveAmount > 0 &&
@@ -187,7 +194,8 @@ const Exchange: React.FC = () => {
             aria-label="conversion-price"
             className="h-1/6 w-4/5 flex justify-center"
           >
-            1 {swapToken} = {conversionPrice} {receiveToken}
+            1{conversionSwapSymbol} = {conversionPrice}
+            {conversionReceiveSymbol}
           </h2>
         )}
       </div>
