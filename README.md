@@ -117,7 +117,7 @@ In the project directory, you can run:
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "coverage": "react-scripts test --coverage",
+    "coverage": "react-scripts test --coverage --watchAll",
     "eject": "react-scripts eject",
     "prepare": "husky install"
 ```
