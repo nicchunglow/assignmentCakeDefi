@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { RiLoader4Line } from 'react-icons/ri';
 import DateAndTime from 'components/DateAndTime';
 import Select from 'components/Select';
 import { supportedTokensId } from './Exchange.constant';
@@ -7,6 +8,7 @@ import { customAxios } from 'service/axios';
 const Exchange: React.FC = () => {
   const [swapToken, setSwapToken] = useState('');
   const [receiveToken, setReceiveToken] = useState('');
+  const [loading, SetLoading] = useState(false);
   const previousSwapAmount = useRef(0);
   const [swapAmount, setSwapAmount] = useState<number>(0);
   const previousReceiveAmount = useRef(0);
@@ -49,6 +51,7 @@ const Exchange: React.FC = () => {
   };
 
   const getCoinData = async (swapToReceive: boolean) => {
+    SetLoading(true);
     if (swapInputCondition || receiveInputCondition) {
       const res = await customAxios.get(`/coins/${swapToken}`, {});
       const tickers = res.data?.tickers;
@@ -101,6 +104,7 @@ const Exchange: React.FC = () => {
           : (previousSwapAmount.current = secondValue);
       }
     }
+    SetLoading(false);
   };
 
   useEffect(() => {
@@ -117,6 +121,19 @@ const Exchange: React.FC = () => {
 
   return (
     <div className="flex justify-center rounded-lg w-2/4 h-3/4 shadow-2xl">
+      {loading && (
+        <span
+          aria-label="loading-screen"
+          className="z-100 fixed w-2/4 h-3/4 bg-gray-300 bg-opacity-80 rounded-lg"
+        >
+          <span className="flex justify-center items-center h-full animate-spin">
+            <RiLoader4Line
+              aria-label="loading-spinner"
+              className="w-10 h-10 text-primary-500"
+            />
+          </span>
+        </span>
+      )}
       <div className="flex flex-col mt-8 w-full items-center">
         <h1 aria-label="exchange-header-text">La Coco Crypto Exchange</h1>
         <DateAndTime />
