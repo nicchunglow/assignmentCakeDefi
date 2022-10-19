@@ -16,7 +16,10 @@ const Exchange: React.FC = () => {
   const swapInputCondition = swapAmount !== previousSwapAmount.current;
   const receiveInputCondition = receiveAmount !== previousReceiveAmount.current;
   const disableInputCondition = !swapToken || !receiveToken;
-  const conversionPrice = (receiveAmount / swapAmount).toFixed(2);
+  const conversionPrice =
+    swapAmount > 0 &&
+    receiveAmount > 0 &&
+    (receiveAmount / swapAmount).toFixed(2);
   const swapTokenOnChange = (event: any) => {
     setSwapToken(event.target.value);
   };

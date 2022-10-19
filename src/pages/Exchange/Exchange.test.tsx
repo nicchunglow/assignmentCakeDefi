@@ -369,11 +369,30 @@ describe('Exchange', () => {
       fireEvent.change(SwapInput, { target: { value: 2 } });
       const ReceiveInput = screen.getByLabelText('receive-input');
       expect(ReceiveInput).toBeInTheDocument();
-      const ConversionPrice = screen.getByLabelText('conversion-price');
-      expect(ConversionPrice).toBeInTheDocument();
       await waitFor(() => {
+        const ConversionPrice = screen.getByLabelText('conversion-price');
+        expect(ConversionPrice).toBeInTheDocument();
         expect(ReceiveInput).toHaveValue('20');
         expect(ConversionPrice).toHaveTextContent('1 bitcoin = 10.00 ethereum');
+      });
+    });
+    test('should not show conversion text if both amount are not available', async () => {
+      const swapTokenValue = 'bitcoin';
+      const receiveTokenValue = 'ethereum';
+      mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+        success: true,
+        tickers: [
+          {
+            coin_id: swapTokenValue,
+            target_coin_id: receiveTokenValue,
+            last: 10,
+          },
+        ],
+      });
+      render(<Exchange />);
+      await waitFor(() => {
+        const ConversionPrice = screen.queryByLabelText('conversion-price');
+        expect(ConversionPrice).not.toBeInTheDocument();
       });
     });
   });
