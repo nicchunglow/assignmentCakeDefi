@@ -32,8 +32,14 @@ const Exchange: React.FC = () => {
     setReceiveAmount(event.target.value);
   };
 
+  const getTickerResult = (searchBy: string, tickers: any[], token: string) => {
+    return tickers.find((ticker: any) => {
+      return ticker[searchBy] === token;
+    });
+  };
+
   const getCoinData = async () => {
-    const specialSwapList = ['defichain', 'tether'];
+    const specialSwapList = ['defichain', 'tether', 'dogecoin'];
     if (swapInputCondition) {
       if (
         specialSwapList.includes(swapToken) &&
@@ -41,16 +47,16 @@ const Exchange: React.FC = () => {
       ) {
         const res = await customAxios.get(`/coins/${swapToken}`, {});
         const tickers = res.data?.tickers;
-        const tickerResult = tickers.find((ticker: any) => {
-          return ticker.target_coin_id === receiveToken;
-        });
+        const tickerResult =
+          getTickerResult('target_coin_id', tickers, receiveToken) ||
+          getTickerResult('coin_id', tickers, receiveToken);
         if (!tickerResult) {
           const res = await customAxios.get(`/coins/${receiveToken}`, {});
           const tickers = res.data?.tickers;
-          const tickerResult = tickers.find((ticker: any) => {
-            return ticker.target_coin_id === swapToken;
-          });
-          const secondValue = swapAmount / tickerResult.last;
+          const tickerResult =
+            getTickerResult('target_coin_id', tickers, swapToken) ||
+            getTickerResult('coin_id', tickers, receiveToken);
+          const secondValue = swapAmount / tickerResult?.last;
           setReceiveAmount(secondValue);
           previousReceiveAmount.current = secondValue;
         } else {
@@ -85,15 +91,16 @@ const Exchange: React.FC = () => {
       ) {
         const res = await customAxios.get(`/coins/${receiveToken}`, {});
         const tickers = res.data?.tickers;
-        const tickerResult = tickers.find((ticker: any) => {
-          return ticker.target_coin_id === swapToken;
-        });
+        const tickerResult =
+          getTickerResult('target_coin_id', tickers, swapToken) ||
+          getTickerResult('coin_id', tickers, swapToken);
         if (!tickerResult) {
           const res = await customAxios.get(`/coins/${swapToken}`, {});
           const tickers = res.data?.tickers;
-          const tickerResult = tickers.find((ticker: any) => {
-            return ticker.target_coin_id === receiveToken;
-          });
+          const tickerResult =
+            getTickerResult('target_coin_id', tickers, receiveToken) ||
+            getTickerResult('coin_id', tickers, receiveToken);
+
           const value = receiveAmount / tickerResult.last;
           setSwapAmount(value);
           previousSwapAmount.current = value;
