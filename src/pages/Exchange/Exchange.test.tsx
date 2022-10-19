@@ -373,9 +373,7 @@ describe('Exchange', () => {
       expect(ConversionPrice).toBeInTheDocument();
       await waitFor(() => {
         expect(ReceiveInput).toHaveValue('20');
-        expect(ConversionPrice).toHaveTextContent(
-          ' 1 bitcoin = 10.00 ethereum',
-        );
+        expect(ConversionPrice).toHaveTextContent('1 bitcoin = 10.00 ethereum');
       });
     });
   });
