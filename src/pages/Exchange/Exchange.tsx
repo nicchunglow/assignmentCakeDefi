@@ -149,6 +149,7 @@ const Exchange: React.FC = () => {
               list={supportedTokensId}
               action="swap"
               onChange={swapTokenOnChange}
+              optionToDisable={receiveToken}
             />
             <input
               disabled={disableInputCondition}
@@ -166,6 +167,7 @@ const Exchange: React.FC = () => {
               list={supportedTokensId}
               action="receive"
               onChange={receiveTokenOnChange}
+              optionToDisable={swapToken}
             />
             <input
               disabled={disableInputCondition}

@@ -319,4 +319,29 @@ describe('Exchange', () => {
       });
     });
   });
+  describe('Select', () => {
+    test('should have selected option be disabled', async () => {
+      const swapTokenValue = 'bitcoin';
+      const receiveTokenValue = 'ethereum';
+      render(<Exchange />);
+      const SwapSelect = screen.getByLabelText('swap-token-select');
+      userEvent.selectOptions(SwapSelect, swapTokenValue);
+      const DisabledReceiveOption = screen.getByRole('option', {
+        name: `receive-${swapTokenValue}-option`,
+      });
+      const ReceiveSelect = screen.getByLabelText('receive-token-select');
+      userEvent.selectOptions(ReceiveSelect, receiveTokenValue);
+      const DisabledSwapOption = screen.getByRole('option', {
+        name: `swap-${receiveTokenValue}-option`,
+      });
+      const SwapOptionTwo = screen.getByRole('option', {
+        name: 'swap-defichain-option',
+      });
+      await waitFor(() => {
+        expect(DisabledSwapOption).toBeDisabled();
+        expect(DisabledReceiveOption).toBeDisabled();
+        expect(SwapOptionTwo).not.toBeDisabled();
+      });
+    });
+  });
 });

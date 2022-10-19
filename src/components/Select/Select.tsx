@@ -8,7 +8,7 @@ type ListItemType = {
 type SelectTokenType = {
   action: string;
   list: ListItemType[];
-
+  optionToDisable?: string;
   onChange: (event: any) => void;
 };
 const SelectToken: React.FC<SelectTokenType> = (props) => {
@@ -16,11 +16,12 @@ const SelectToken: React.FC<SelectTokenType> = (props) => {
   const optionsList = list.map((token) => {
     return (
       <option
-        key={`${token.id}-option`}
-        aria-label={`${props.action}-${token.id}-option`}
-        value={token.id}
+        key={`${token?.id}-option`}
+        aria-label={`${props.action}-${token?.id}-option`}
+        value={token?.id}
+        disabled={props?.optionToDisable === token?.id}
       >
-        {token.symbol}
+        {token?.symbol.toUpperCase()}
       </option>
     );
   });
