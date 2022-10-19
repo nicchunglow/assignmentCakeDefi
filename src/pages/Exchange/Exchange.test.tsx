@@ -48,946 +48,274 @@ describe('Exchange', () => {
     });
     describe('API', () => {
       describe('Swap', () => {
-        describe('BTC', () => {
-          test('should have change receive input display from BTC to ETH ', async () => {
-            const swapTokenValue = 'bitcoin';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  eth: 2,
-                },
+        test('should be able to multiply if using swapToken for api and its receiveToken is target coin', async () => {
+          const swapTokenValue = 'bitcoin';
+          const receiveTokenValue = 'ethereum';
+          mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+            success: true,
+            tickers: [
+              {
+                coin_id: swapTokenValue,
+                target_coin_id: receiveTokenValue,
+                last: 10,
               },
-            });
-            render(<Exchange />);
-            const receiveTokenValue = 'ethereum';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
+            ],
           });
-          test('should have change receive input display from BTC to DFI ', async () => {
-            const swapTokenValue = 'defichain';
-            const receiveTokenValue = 'bitcoin';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
-              },
-            });
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
+          render(<Exchange />);
+          const SwapSelect = screen.getByLabelText('swap-token-select');
+          const receiveSelect = screen.getByLabelText('receive-token-select');
+          userEvent.selectOptions(SwapSelect, swapTokenValue);
+          userEvent.selectOptions(receiveSelect, receiveTokenValue);
+          await waitFor(() => {
+            expect(SwapSelect).toHaveValue(swapTokenValue);
+            expect(receiveSelect).toHaveValue(receiveTokenValue);
           });
-          test('should have change receive input display from BTC to DOGE ', async () => {
-            const swapTokenValue = 'dogecoin';
-            const receiveTokenValue = 'bitcoin';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
-              },
-            });
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
-          });
-          test('should have change receive input display from BTC to USDT ', async () => {
-            const swapTokenValue = 'tether';
-            const receiveTokenValue = 'bitcoin';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
-              },
-            });
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
-          });
-          test('should have change receive input display from BTC to USDT ', async () => {
-            const swapTokenValue = 'tether';
-            const receiveTokenValue = 'bitcoin';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
-              },
-            });
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
+          const SwapInput = screen.getByLabelText('swap-input');
+          fireEvent.change(SwapInput, { target: { value: 2 } });
+          const ReceiveInput = screen.getByLabelText('receive-input');
+          expect(ReceiveInput).toBeInTheDocument();
+          await waitFor(() => {
+            expect(ReceiveInput).toHaveValue('20');
           });
         });
-        describe('ETH', () => {
-          test('should have change receive input display from ETH to DFI ', async () => {
-            const swapTokenValue = 'ethereum';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
+        test('should be able to divide if using swapToken for api and its receiveToken is base coin', async () => {
+          const swapTokenValue = 'bitcoin';
+          const receiveTokenValue = 'ethereum';
+          mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+            success: true,
+            tickers: [
+              {
+                target_coin_id: swapTokenValue,
+                coin_id: receiveTokenValue,
+                last: 10,
               },
-            });
-            const receiveTokenValue = 'defichain';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  eth: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('1');
-            });
+            ],
           });
-          test('should have change receive input display from ETH to DOGE ', async () => {
-            const swapTokenValue = 'ethereum';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
-              },
-            });
-            const receiveTokenValue = 'dogecoin';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  eth: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('1');
-            });
+          render(<Exchange />);
+          const SwapSelect = screen.getByLabelText('swap-token-select');
+          const receiveSelect = screen.getByLabelText('receive-token-select');
+          userEvent.selectOptions(SwapSelect, swapTokenValue);
+          userEvent.selectOptions(receiveSelect, receiveTokenValue);
+          await waitFor(() => {
+            expect(SwapSelect).toHaveValue(swapTokenValue);
+            expect(receiveSelect).toHaveValue(receiveTokenValue);
           });
-          test('should have change receive input display from ETH to USDT ', async () => {
-            const swapTokenValue = 'ethereum';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
-              },
-            });
-            const receiveTokenValue = 'tether';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  eth: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('1');
-            });
+          const SwapInput = screen.getByLabelText('swap-input');
+          fireEvent.change(SwapInput, { target: { value: 1 } });
+          const ReceiveInput = screen.getByLabelText('receive-input');
+          expect(ReceiveInput).toBeInTheDocument();
+          await waitFor(() => {
+            expect(ReceiveInput).toHaveValue('0.1');
           });
         });
-        describe('DFI', () => {
-          test('should have change receive input display from DFI to BTC ', async () => {
-            const swapTokenValue = 'defichain';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const receiveTokenValue = 'bitcoin';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
+        test('should be able to multiply if swapToken has no value,using receiveToken for api and receiveToken is target coin', async () => {
+          const swapTokenValue = 'bitcoin';
+          const receiveTokenValue = 'ethereum';
+          mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+            success: true,
+            tickers: [{}],
           });
-          test('should have change receive input display from DFI to ETH ', async () => {
-            const swapTokenValue = 'defichain';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  eth: 2,
-                },
+          mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
+            success: true,
+            tickers: [
+              {
+                coin_id: swapTokenValue,
+                target_coin_id: receiveTokenValue,
+                last: 10,
               },
-            });
-            render(<Exchange />);
-            const receiveTokenValue = 'ethereum';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
+            ],
           });
-          test('should have change receive input display from DFI to USDT ', async () => {
-            const swapTokenValue = 'defichain';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              tickers: [
-                {
-                  base: 'DFI',
-                  target: 'USDT',
-                  last: 2,
-                  target_coin_id: 'tether',
-                },
-              ],
-            });
-            render(<Exchange />);
-            const receiveTokenValue = 'tether';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
+          render(<Exchange />);
+          const SwapSelect = screen.getByLabelText('swap-token-select');
+          const receiveSelect = screen.getByLabelText('receive-token-select');
+          userEvent.selectOptions(SwapSelect, swapTokenValue);
+          userEvent.selectOptions(receiveSelect, receiveTokenValue);
+          await waitFor(() => {
+            expect(SwapSelect).toHaveValue(swapTokenValue);
+            expect(receiveSelect).toHaveValue(receiveTokenValue);
+          });
+          const SwapInput = screen.getByLabelText('swap-input');
+          fireEvent.change(SwapInput, { target: { value: 2 } });
+          const ReceiveInput = screen.getByLabelText('receive-input');
+          expect(ReceiveInput).toBeInTheDocument();
+          await waitFor(() => {
+            expect(ReceiveInput).toHaveValue('20');
           });
         });
-        describe('DOGE', () => {
-          test('should have change receive input display from DOGE to BTC ', async () => {
-            const swapTokenValue = 'dogecoin';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
+        test('should be able to divide if swapToken has no value,using receiveToken for api and receiveToken is base coin', async () => {
+          const swapTokenValue = 'bitcoin';
+          const receiveTokenValue = 'ethereum';
+          mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+            success: true,
+            tickers: [],
+          });
+          mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
+            success: true,
+            tickers: [
+              {
+                target_coin_id: swapTokenValue,
+                coin_id: receiveTokenValue,
+                last: 10,
               },
-            });
-            render(<Exchange />);
-            const receiveTokenValue = 'bitcoin';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
+            ],
           });
-          test('should have change receive input display from DOGE to ETH ', async () => {
-            const swapTokenValue = 'dogecoin';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  eth: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const receiveTokenValue = 'ethereum';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
+          render(<Exchange />);
+          const SwapSelect = screen.getByLabelText('swap-token-select');
+          const receiveSelect = screen.getByLabelText('receive-token-select');
+          userEvent.selectOptions(SwapSelect, swapTokenValue);
+          userEvent.selectOptions(receiveSelect, receiveTokenValue);
+          await waitFor(() => {
+            expect(SwapSelect).toHaveValue(swapTokenValue);
+            expect(receiveSelect).toHaveValue(receiveTokenValue);
           });
-          test('should have change receive input display from DOGE to USDT ', async () => {
-            const swapTokenValue = 'dogecoin';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              tickers: [
-                {
-                  last: 2,
-                  coin_id: 'dogecoin',
-                  target_coin_id: 'tether',
-                },
-              ],
-            });
-            render(<Exchange />);
-            const receiveTokenValue = 'tether';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
-          });
-          test('should have change receive input display from DOGE to DFI ', async () => {
-            const swapTokenValue = 'dogecoin';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              tickers: [
-                {
-                  last: 2,
-                  coin_id: 'dogecoin',
-                  target_coin_id: 'defichain',
-                },
-              ],
-            });
-            render(<Exchange />);
-            const receiveTokenValue = 'defichain';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
-          });
-        });
-
-        describe('USDT', () => {
-          test('should have change receive input display from USDT to BTC ', async () => {
-            const swapTokenValue = 'tether';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const receiveTokenValue = 'bitcoin';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
-          });
-
-          test('should have change receive input display from USDT to ETH ', async () => {
-            const swapTokenValue = 'tether';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  eth: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const receiveTokenValue = 'ethereum';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('4');
-            });
-          });
-
-          test('should have change receive input display from USDT to DFI ', async () => {
-            const swapTokenValue = 'tether';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              tickers: [],
-            });
-            const receiveTokenValue = 'defichain';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              tickers: [
-                {
-                  base: 'DFI',
-                  last: 2,
-                  target_coin_id: 'tether',
-                },
-              ],
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            fireEvent.change(SwapInput, { target: { value: 2 } });
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(ReceiveInput).toHaveValue('1');
-            });
+          const SwapInput = screen.getByLabelText('swap-input');
+          fireEvent.change(SwapInput, { target: { value: 2 } });
+          const ReceiveInput = screen.getByLabelText('receive-input');
+          expect(ReceiveInput).toBeInTheDocument();
+          await waitFor(() => {
+            expect(ReceiveInput).toHaveValue('0.2');
           });
         });
       });
       describe('Receive', () => {
-        describe('BTC', () => {
-          test('should have change swap input display from BTC to DFI ', async () => {
-            const receiveTokenValue = 'bitcoin';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
-              },
-            });
-            const swapTokenValue = 'defichain';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('1');
-            });
+        test('should be able to multiply if using receiveToken for api and its swapToken is target coin', async () => {
+          const receiveTokenValue = 'ethereum';
+          const swapTokenValue = 'bitcoin';
+          mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+            success: true,
+            tickers: [],
           });
-          test('should have change swap input display from BTC to DOGE ', async () => {
-            const receiveTokenValue = 'bitcoin';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
+
+          mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
+            success: true,
+            tickers: [
+              {
+                coin_id: receiveTokenValue,
+                target_coin_id: swapTokenValue,
+                last: 10,
               },
-            });
-            const swapTokenValue = 'dogecoin';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('1');
-            });
+            ],
           });
-          test('should have change swap input display from BTC to USDT ', async () => {
-            const receiveTokenValue = 'bitcoin';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
-              },
-            });
-            const swapTokenValue = 'tether';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('1');
-            });
+          render(<Exchange />);
+          const SwapSelect = screen.getByLabelText('swap-token-select');
+          const receiveSelect = screen.getByLabelText('receive-token-select');
+          userEvent.selectOptions(SwapSelect, swapTokenValue);
+          userEvent.selectOptions(receiveSelect, receiveTokenValue);
+          await waitFor(() => {
+            expect(SwapSelect).toHaveValue(swapTokenValue);
+            expect(receiveSelect).toHaveValue(receiveTokenValue);
+          });
+          const ReceiveInput = screen.getByLabelText('receive-input');
+          fireEvent.change(ReceiveInput, { target: { value: 2 } });
+          const SwapInput = screen.getByLabelText('swap-input');
+          expect(SwapInput).toBeInTheDocument();
+          await waitFor(() => {
+            expect(SwapInput).toHaveValue('20');
           });
         });
-        describe('ETH', () => {
-          test('should have change swap input display from ETH to BTC ', async () => {
-            const receiveTokenValue = 'ethereum';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const swapTokenValue = 'bitcoin';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('4');
-            });
+        test('should be able to divide if using receiveToken for api and its swapToken is base coin', async () => {
+          const receiveTokenValue = 'ethereum';
+          const swapTokenValue = 'bitcoin';
+          mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+            success: true,
+            tickers: [],
           });
-          test('should have change swap input display from ETH to DFI ', async () => {
-            const receiveTokenValue = 'ethereum';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
+
+          mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
+            success: true,
+            tickers: [
+              {
+                target_coin_id: receiveTokenValue,
+                coin_id: swapTokenValue,
+                last: 10,
               },
-            });
-            const swapTokenValue = 'defichain';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  eth: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('1');
-            });
+            ],
           });
-          test('should have change swap input display from ETH to DFI ', async () => {
-            const receiveTokenValue = 'ethereum';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
-              },
-            });
-            const swapTokenValue = 'dogecoin';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  eth: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('1');
-            });
+          render(<Exchange />);
+          const SwapSelect = screen.getByLabelText('swap-token-select');
+          const receiveSelect = screen.getByLabelText('receive-token-select');
+          userEvent.selectOptions(SwapSelect, swapTokenValue);
+          userEvent.selectOptions(receiveSelect, receiveTokenValue);
+          await waitFor(() => {
+            expect(SwapSelect).toHaveValue(swapTokenValue);
+            expect(receiveSelect).toHaveValue(receiveTokenValue);
           });
-          test('should have change swap input display from ETH to USDT ', async () => {
-            const receiveTokenValue = 'ethereum';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {},
-              },
-            });
-            const swapTokenValue = 'tether';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  eth: 2,
-                },
-              },
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('1');
-            });
+          const ReceiveInput = screen.getByLabelText('receive-input');
+          fireEvent.change(ReceiveInput, { target: { value: 2 } });
+          const SwapInput = screen.getByLabelText('swap-input');
+          expect(SwapInput).toBeInTheDocument();
+          await waitFor(() => {
+            expect(SwapInput).toHaveValue('0.2');
           });
         });
-        describe('DFI', () => {
-          test('should have change swap input display from DFI to USDT ', async () => {
-            const receiveTokenValue = 'defichain';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              tickers: [
-                {
-                  base: 'DFI',
-                  last: 2,
-                  target_coin_id: 'tether',
-                },
-              ],
-            });
-            render(<Exchange />);
-            const swapTokenValue = 'tether';
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('1');
-            });
-          });
-        });
-        describe('USDT', () => {
-          test('should have change swap input display from USDT to DFI ', async () => {
-            const receiveTokenValue = 'tether';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              tickers: [],
-            });
-            const swapTokenValue = 'defichain';
-            mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
-              success: true,
-              tickers: [
-                {
-                  base: 'DFI',
-                  last: 2,
-                  target_coin_id: 'tether',
-                },
-              ],
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('1');
-            });
-          });
-        });
-        describe('DOGE', () => {
-          test('should have change receive input display from DOGE to BTC ', async () => {
-            const receiveTokenValue = 'dogecoin';
-            const swapTokenValue = 'bitcoin';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              market_data: {
-                current_price: {
-                  btc: 0.5,
-                },
+        test('should be able to multiply if using receiveToken has no value, swapToken for api and its swapToken is target coin', async () => {
+          const receiveTokenValue = 'ethereum';
+          const swapTokenValue = 'bitcoin';
+          mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+            success: true,
+            tickers: [
+              {
+                coin_id: receiveTokenValue,
+                target_coin_id: swapTokenValue,
+                last: 10,
               },
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('1');
-            });
+            ],
           });
-          test('should have change receive input display from DOGE to DFI ', async () => {
-            const receiveTokenValue = 'dogecoin';
-            const swapTokenValue = 'defichain';
-            mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
-              success: true,
-              tickers: [
-                {
-                  last: 2,
-                  coin_id: receiveTokenValue,
-                  target_coin_id: swapTokenValue,
-                },
-              ],
-            });
-            render(<Exchange />);
-            const SwapSelect = screen.getByLabelText('swap-token-select');
-            const receiveSelect = screen.getByLabelText('receive-token-select');
-            userEvent.selectOptions(SwapSelect, swapTokenValue);
-            userEvent.selectOptions(receiveSelect, receiveTokenValue);
-            await waitFor(() => {
-              expect(SwapSelect).toHaveValue(swapTokenValue);
-              expect(receiveSelect).toHaveValue(receiveTokenValue);
-            });
-            const SwapInput = screen.getByLabelText('swap-input');
-            const ReceiveInput = screen.getByLabelText('receive-input');
-            fireEvent.change(ReceiveInput, { target: { value: 2 } });
-            expect(ReceiveInput).toBeInTheDocument();
-            await waitFor(() => {
-              expect(SwapInput).toHaveValue('1');
-            });
+
+          mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
+            success: true,
+            tickers: [],
+          });
+          render(<Exchange />);
+          const SwapSelect = screen.getByLabelText('swap-token-select');
+          const receiveSelect = screen.getByLabelText('receive-token-select');
+          userEvent.selectOptions(SwapSelect, swapTokenValue);
+          userEvent.selectOptions(receiveSelect, receiveTokenValue);
+          await waitFor(() => {
+            expect(SwapSelect).toHaveValue(swapTokenValue);
+            expect(receiveSelect).toHaveValue(receiveTokenValue);
+          });
+          const ReceiveInput = screen.getByLabelText('receive-input');
+          fireEvent.change(ReceiveInput, { target: { value: 2 } });
+          const SwapInput = screen.getByLabelText('swap-input');
+          expect(SwapInput).toBeInTheDocument();
+          await waitFor(() => {
+            expect(SwapInput).toHaveValue('20');
+          });
+        });
+        test('should be able to divide if using receiveToken has no value, swapToken for api and its swapToken is base coin', async () => {
+          const receiveTokenValue = 'ethereum';
+          const swapTokenValue = 'bitcoin';
+          mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+            success: true,
+            tickers: [
+              {
+                target_coin_id: receiveTokenValue,
+                coin_id: swapTokenValue,
+                last: 10,
+              },
+            ],
+          });
+
+          mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
+            success: true,
+            tickers: [],
+          });
+          render(<Exchange />);
+          const SwapSelect = screen.getByLabelText('swap-token-select');
+          const receiveSelect = screen.getByLabelText('receive-token-select');
+          userEvent.selectOptions(SwapSelect, swapTokenValue);
+          userEvent.selectOptions(receiveSelect, receiveTokenValue);
+          await waitFor(() => {
+            expect(SwapSelect).toHaveValue(swapTokenValue);
+            expect(receiveSelect).toHaveValue(receiveTokenValue);
+          });
+          const ReceiveInput = screen.getByLabelText('receive-input');
+          fireEvent.change(ReceiveInput, { target: { value: 2 } });
+          const SwapInput = screen.getByLabelText('swap-input');
+          expect(SwapInput).toBeInTheDocument();
+          await waitFor(() => {
+            expect(SwapInput).toHaveValue('0.2');
           });
         });
       });
