@@ -450,6 +450,71 @@ describe('Exchange', () => {
           expect(ReceiveInput).toHaveValue('4');
         });
       });
+      test('should have change receive input display from DFI to USDT ', async () => {
+        const swapTokenValue = 'defichain';
+        mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+          success: true,
+          tickers: [
+            {
+              base: 'DFI',
+              target: 'USDT',
+              last: 2,
+              target_coin_id: 'tether',
+            },
+          ],
+        });
+        render(<Exchange />);
+        const receiveTokenValue = 'tether';
+        const SwapSelect = screen.getByLabelText('swap-token-select');
+        const receiveSelect = screen.getByLabelText('receive-token-select');
+        userEvent.selectOptions(SwapSelect, swapTokenValue);
+        userEvent.selectOptions(receiveSelect, receiveTokenValue);
+        await waitFor(() => {
+          expect(SwapSelect).toHaveValue(swapTokenValue);
+          expect(receiveSelect).toHaveValue(receiveTokenValue);
+        });
+        const SwapInput = screen.getByLabelText('swap-input');
+        fireEvent.change(SwapInput, { target: { value: 2 } });
+        const ReceiveInput = screen.getByLabelText('receive-input');
+        expect(ReceiveInput).toBeInTheDocument();
+        await waitFor(() => {
+          expect(ReceiveInput).toHaveValue('4');
+        });
+      });
+      test('should have change receive input display from USDT to DFI ', async () => {
+        const swapTokenValue = 'tether';
+        mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+          success: true,
+          tickers: [],
+        });
+        const receiveTokenValue = 'defichain';
+        mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
+          success: true,
+          tickers: [
+            {
+              base: 'DFI',
+              last: 2,
+              target_coin_id: 'tether',
+            },
+          ],
+        });
+        render(<Exchange />);
+        const SwapSelect = screen.getByLabelText('swap-token-select');
+        const receiveSelect = screen.getByLabelText('receive-token-select');
+        userEvent.selectOptions(SwapSelect, swapTokenValue);
+        userEvent.selectOptions(receiveSelect, receiveTokenValue);
+        await waitFor(() => {
+          expect(SwapSelect).toHaveValue(swapTokenValue);
+          expect(receiveSelect).toHaveValue(receiveTokenValue);
+        });
+        const SwapInput = screen.getByLabelText('swap-input');
+        fireEvent.change(SwapInput, { target: { value: 2 } });
+        const ReceiveInput = screen.getByLabelText('receive-input');
+        expect(ReceiveInput).toBeInTheDocument();
+        await waitFor(() => {
+          expect(ReceiveInput).toHaveValue('1');
+        });
+      });
     });
     describe('Receive', () => {
       test('should have change swap input display from ETH to BTC ', async () => {
@@ -736,6 +801,70 @@ describe('Exchange', () => {
           },
         });
         render(<Exchange />);
+        const SwapSelect = screen.getByLabelText('swap-token-select');
+        const receiveSelect = screen.getByLabelText('receive-token-select');
+        userEvent.selectOptions(SwapSelect, swapTokenValue);
+        userEvent.selectOptions(receiveSelect, receiveTokenValue);
+        await waitFor(() => {
+          expect(SwapSelect).toHaveValue(swapTokenValue);
+          expect(receiveSelect).toHaveValue(receiveTokenValue);
+        });
+        const SwapInput = screen.getByLabelText('swap-input');
+        const ReceiveInput = screen.getByLabelText('receive-input');
+        fireEvent.change(ReceiveInput, { target: { value: 2 } });
+        expect(ReceiveInput).toBeInTheDocument();
+        await waitFor(() => {
+          expect(SwapInput).toHaveValue('1');
+        });
+      });
+      test('should have change swap input display from USDT to DFI ', async () => {
+        const receiveTokenValue = 'tether';
+        mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
+          success: true,
+          tickers: [],
+        });
+        const swapTokenValue = 'defichain';
+        mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+          success: true,
+          tickers: [
+            {
+              base: 'DFI',
+              last: 2,
+              target_coin_id: 'tether',
+            },
+          ],
+        });
+        render(<Exchange />);
+        const SwapSelect = screen.getByLabelText('swap-token-select');
+        const receiveSelect = screen.getByLabelText('receive-token-select');
+        userEvent.selectOptions(SwapSelect, swapTokenValue);
+        userEvent.selectOptions(receiveSelect, receiveTokenValue);
+        await waitFor(() => {
+          expect(SwapSelect).toHaveValue(swapTokenValue);
+          expect(receiveSelect).toHaveValue(receiveTokenValue);
+        });
+        const SwapInput = screen.getByLabelText('swap-input');
+        const ReceiveInput = screen.getByLabelText('receive-input');
+        fireEvent.change(ReceiveInput, { target: { value: 2 } });
+        expect(ReceiveInput).toBeInTheDocument();
+        await waitFor(() => {
+          expect(SwapInput).toHaveValue('1');
+        });
+      });
+      test('should have change swap input display from DFI to USDT ', async () => {
+        const receiveTokenValue = 'defichain';
+        mock.onGet(`/coins/${receiveTokenValue}`).reply(200, {
+          success: true,
+          tickers: [
+            {
+              base: 'DFI',
+              last: 2,
+              target_coin_id: 'tether',
+            },
+          ],
+        });
+        render(<Exchange />);
+        const swapTokenValue = 'tether';
         const SwapSelect = screen.getByLabelText('swap-token-select');
         const receiveSelect = screen.getByLabelText('receive-token-select');
         userEvent.selectOptions(SwapSelect, swapTokenValue);

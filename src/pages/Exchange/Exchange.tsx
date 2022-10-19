@@ -33,42 +33,94 @@ const Exchange: React.FC = () => {
   };
 
   const getCoinData = async () => {
+    const specialSwapList = ['defichain', 'tether'];
     if (swapInputCondition) {
-      const symbol =
-        supportedTokensId.find((item) => item.id === receiveToken)?.symbol ||
-        '';
-      const res = await customAxios.get(`/coins/${swapToken}`, {});
-      const value = swapAmount * res.data.market_data.current_price[symbol];
-      if (!value) {
-        const secondRes = await customAxios.get(`/coins/${receiveToken}`, {});
-        const symbol =
-          supportedTokensId.find((item) => item.id === swapToken)?.symbol || '';
-        const secondValue =
-          swapAmount / secondRes.data.market_data.current_price[symbol];
-        setReceiveAmount(secondValue);
-        previousReceiveAmount.current = secondValue;
+      if (
+        specialSwapList.includes(swapToken) &&
+        specialSwapList.includes(receiveToken)
+      ) {
+        const res = await customAxios.get(`/coins/${swapToken}`, {});
+        const tickers = res.data?.tickers;
+        const tickerResult = tickers.find((ticker: any) => {
+          return ticker.target_coin_id === receiveToken;
+        });
+        if (!tickerResult) {
+          const res = await customAxios.get(`/coins/${receiveToken}`, {});
+          const tickers = res.data?.tickers;
+          const tickerResult = tickers.find((ticker: any) => {
+            return ticker.target_coin_id === swapToken;
+          });
+          const secondValue = swapAmount / tickerResult.last;
+          setReceiveAmount(secondValue);
+          previousReceiveAmount.current = secondValue;
+        } else {
+          const value = swapAmount * tickerResult?.last;
+          setReceiveAmount(value);
+          previousReceiveAmount.current = value;
+        }
       } else {
-        setReceiveAmount(value);
-        previousReceiveAmount.current = value;
-      }
-    } else if (receiveInputCondition) {
-      const symbol =
-        supportedTokensId.find((item) => item.id === swapToken)?.symbol || '';
-      const res = await customAxios.get(`/coins/${receiveToken}`, {});
-      const value =
-        receiveAmount * res.data?.market_data?.current_price?.[symbol];
-      if (!value) {
-        const secondRes = await customAxios.get(`/coins/${swapToken}`, {});
         const symbol =
           supportedTokensId.find((item) => item.id === receiveToken)?.symbol ||
           '';
-        const secondValue =
-          receiveAmount / secondRes.data.market_data.current_price[symbol];
-        setSwapAmount(secondValue);
-        previousSwapAmount.current = secondValue;
+        const res = await customAxios.get(`/coins/${swapToken}`, {});
+        const value = swapAmount * res.data.market_data.current_price[symbol];
+        if (!value) {
+          const secondRes = await customAxios.get(`/coins/${receiveToken}`, {});
+          const symbol =
+            supportedTokensId.find((item) => item.id === swapToken)?.symbol ||
+            '';
+          const secondValue =
+            swapAmount / secondRes.data.market_data.current_price[symbol];
+          setReceiveAmount(secondValue);
+          previousReceiveAmount.current = secondValue;
+        } else {
+          setReceiveAmount(value);
+          previousReceiveAmount.current = value;
+        }
+      }
+    } else if (receiveInputCondition) {
+      if (
+        specialSwapList.includes(swapToken) &&
+        specialSwapList.includes(receiveToken)
+      ) {
+        const res = await customAxios.get(`/coins/${receiveToken}`, {});
+        const tickers = res.data?.tickers;
+        const tickerResult = tickers.find((ticker: any) => {
+          return ticker.target_coin_id === swapToken;
+        });
+        if (!tickerResult) {
+          const res = await customAxios.get(`/coins/${swapToken}`, {});
+          const tickers = res.data?.tickers;
+          const tickerResult = tickers.find((ticker: any) => {
+            return ticker.target_coin_id === receiveToken;
+          });
+          const value = receiveAmount / tickerResult.last;
+          setSwapAmount(value);
+          previousSwapAmount.current = value;
+        } else {
+          const value = receiveAmount / tickerResult.last;
+          setSwapAmount(value);
+          previousSwapAmount.current = value;
+        }
       } else {
-        setSwapAmount(value);
-        previousSwapAmount.current = value;
+        const symbol =
+          supportedTokensId.find((item) => item.id === swapToken)?.symbol || '';
+        const res = await customAxios.get(`/coins/${receiveToken}`, {});
+        const value =
+          receiveAmount * res.data?.market_data?.current_price?.[symbol];
+        if (!value) {
+          const secondRes = await customAxios.get(`/coins/${swapToken}`, {});
+          const symbol =
+            supportedTokensId.find((item) => item.id === receiveToken)
+              ?.symbol || '';
+          const secondValue =
+            receiveAmount / secondRes.data.market_data.current_price[symbol];
+          setSwapAmount(secondValue);
+          previousSwapAmount.current = secondValue;
+        } else {
+          setSwapAmount(value);
+          previousSwapAmount.current = value;
+        }
       }
     }
   };
