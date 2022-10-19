@@ -8,7 +8,7 @@ import { customAxios } from 'service/axios';
 const mock = new MockAdapter(customAxios);
 
 describe('Exchange', () => {
-  beforeEach(() => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
   test('should render', () => {
@@ -393,6 +393,49 @@ describe('Exchange', () => {
       await waitFor(() => {
         const ConversionPrice = screen.queryByLabelText('conversion-price');
         expect(ConversionPrice).not.toBeInTheDocument();
+      });
+    });
+  });
+  describe('Swap Button', () => {
+    test('should swap input values between swap and receive input', async () => {
+      const swapTokenValue = 'bitcoin';
+      const receiveTokenValue = 'ethereum';
+      mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
+        success: true,
+        tickers: [
+          {
+            coin_id: swapTokenValue,
+            target_coin_id: receiveTokenValue,
+            last: 2,
+          },
+        ],
+      });
+      render(<Exchange />);
+      const SwapSelect = screen.getByLabelText('swap-token-select');
+      const receiveSelect = screen.getByLabelText('receive-token-select');
+      userEvent.selectOptions(SwapSelect, swapTokenValue);
+      userEvent.selectOptions(receiveSelect, receiveTokenValue);
+
+      await waitFor(() => {
+        expect(SwapSelect).toHaveValue(swapTokenValue);
+        expect(receiveSelect).toHaveValue(receiveTokenValue);
+      });
+
+      const SwapInput = screen.getByLabelText('swap-input');
+      fireEvent.change(SwapInput, { target: { value: 2 } });
+      const ReceiveInput = screen.getByLabelText('receive-input');
+      await waitFor(() => {
+        expect(SwapInput).toHaveValue('2');
+        expect(ReceiveInput).toHaveValue('4');
+      });
+      const SwapButton = screen.getByRole('button', { name: 'swap-button' });
+      expect(SwapButton).toBeInTheDocument();
+      fireEvent.click(SwapButton);
+      await waitFor(() => {
+        expect(SwapInput).toHaveValue('4');
+        expect(ReceiveInput).toHaveValue('2');
+        expect(SwapSelect).toHaveValue(receiveTokenValue);
+        expect(receiveSelect).toHaveValue(swapTokenValue);
       });
     });
   });

@@ -13,9 +13,11 @@ const Exchange: React.FC = () => {
   const [swapAmount, setSwapAmount] = useState<number>(0);
   const previousReceiveAmount = useRef(0);
   const [receiveAmount, setReceiveAmount] = useState<number>(0);
+
   const swapInputCondition = swapAmount !== previousSwapAmount.current;
   const receiveInputCondition = receiveAmount !== previousReceiveAmount.current;
   const disableInputCondition = !swapToken || !receiveToken;
+
   const conversionSwapSymbol = supportedTokensId
     .find((token) => token.id === swapToken)
     ?.symbol.toUpperCase();
@@ -26,7 +28,8 @@ const Exchange: React.FC = () => {
   const conversionPrice =
     swapAmount > 0 &&
     receiveAmount > 0 &&
-    (receiveAmount / swapAmount).toFixed(2);
+    (receiveAmount / swapAmount).toFixed(5);
+
   const swapTokenOnChange = (event: any) => {
     setSwapToken(event.target.value);
   };
@@ -42,6 +45,14 @@ const Exchange: React.FC = () => {
   const receiveInputOnChange = async (event: any) => {
     previousReceiveAmount.current = receiveAmount;
     setReceiveAmount(event.target.value);
+  };
+
+  const handleSwapButton = () => {
+    setSwapAmount(previousReceiveAmount.current);
+    setReceiveAmount(previousSwapAmount.current);
+    const previousSwapToken = swapToken;
+    setSwapToken(receiveToken);
+    setReceiveToken(previousSwapToken);
   };
 
   const getTickerResult = (
@@ -138,7 +149,7 @@ const Exchange: React.FC = () => {
       {loading && (
         <span
           aria-label="loading-screen"
-          className="z-100 fixed w-2/4 h-3/4 bg-gray-300 bg-opacity-80 rounded-lg"
+          className="z-100 fixed w-2/4 h-4/5 bg-gray-300 bg-opacity-80 rounded-lg"
         >
           <span className="flex justify-center items-center h-full animate-spin">
             <RiLoader4Line
@@ -149,10 +160,12 @@ const Exchange: React.FC = () => {
         </span>
       )}
       <div className="flex flex-col mt-8 w-full h-full items-center">
-        <h1 aria-label="exchange-header-text">La Coco Crypto Exchange</h1>
+        <h1 aria-label="exchange-header-text" className="text-3xl">
+          La Coco Crypto Exchange
+        </h1>
         <DateAndTime />
         <div className="flex justify-around w-full h-2/4">
-          <span className="flex flex-col items-center justify-around bg-primary-300 w-5/12 h-4/5 rounded-lg mt-8">
+          <span className="flex flex-col items-center justify-around shadow-2xl bg-primary-200 w-5/12 h-4/5 rounded-lg mt-8">
             <h2 aria-label="swap-token-text">Token to swap</h2>
             <Select
               aria-label="swap-token-select"
@@ -160,6 +173,7 @@ const Exchange: React.FC = () => {
               action="swap"
               onChange={swapTokenOnChange}
               optionToDisable={receiveToken}
+              value={swapToken}
             />
             <input
               disabled={disableInputCondition}
@@ -170,7 +184,7 @@ const Exchange: React.FC = () => {
               value={swapAmount}
             />
           </span>
-          <span className="flex flex-col items-center justify-around bg-secondary-300 w-5/12 h-4/5 rounded-lg mt-8">
+          <span className="flex flex-col items-center justify-around shadow-2xl bg-primary-200 w-5/12 h-4/5 rounded-lg mt-8">
             <h2 aria-label="receive-token-text">Token to Receive</h2>
             <Select
               aria-label="receive-token-select"
@@ -178,6 +192,7 @@ const Exchange: React.FC = () => {
               action="receive"
               onChange={receiveTokenOnChange}
               optionToDisable={swapToken}
+              value={receiveToken}
             />
             <input
               disabled={disableInputCondition}
@@ -189,15 +204,25 @@ const Exchange: React.FC = () => {
             />
           </span>
         </div>
-        {conversionPrice && (
-          <h2
-            aria-label="conversion-price"
-            className="h-1/6 w-4/5 flex justify-center"
+        <span className="flex flex-col w-full items-center">
+          <button
+            aria-label="swap-button"
+            onClick={handleSwapButton}
+            disabled={!conversionPrice}
+            className="rounded-lg h-14 w-2/5 disabled:bg-gray-100 disabled:text-gray-300 bg-secondary-300 hover:bg-secondary-200 active:bg-secondary-100 text-white text-lg font-thin"
           >
-            1{conversionSwapSymbol} = {conversionPrice}
-            {conversionReceiveSymbol}
-          </h2>
-        )}
+            SWAP
+          </button>
+          {conversionPrice && (
+            <h2
+              aria-label="conversion-price"
+              className="h-1/6 w-4/5 flex justify-center"
+            >
+              1{conversionSwapSymbol} = {conversionPrice}
+              {conversionReceiveSymbol}
+            </h2>
+          )}
+        </span>
       </div>
     </div>
   );

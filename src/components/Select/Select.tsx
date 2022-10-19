@@ -10,6 +10,7 @@ type SelectTokenType = {
   list: ListItemType[];
   optionToDisable?: string;
   onChange: (event: any) => void;
+  value?: string;
 };
 const SelectToken: React.FC<SelectTokenType> = (props) => {
   const { action, list, onChange } = props;
@@ -31,6 +32,7 @@ const SelectToken: React.FC<SelectTokenType> = (props) => {
       aria-label={`${action}-token-select`}
       name={`${action}-token-select`}
       onChange={onChange}
+      value={props?.value}
     >
       <option aria-label={`${action}-option`}>Select token to {action}</option>
       {optionsList}
