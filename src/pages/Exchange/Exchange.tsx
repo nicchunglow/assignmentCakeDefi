@@ -73,10 +73,12 @@ const Exchange: React.FC = () => {
       const value = swapTargetTickerResult
         ? chosenAmount * swapTargetTickerResult?.last
         : chosenAmount / swapBaseTickerResult?.last;
-      swapToReceive ? setReceiveAmount(value) : setSwapAmount(value);
-      swapToReceive
-        ? (previousReceiveAmount.current = value)
-        : (previousSwapAmount.current = value);
+      if (value) {
+        swapToReceive ? setReceiveAmount(value) : setSwapAmount(value);
+        swapToReceive
+          ? (previousReceiveAmount.current = value)
+          : (previousSwapAmount.current = value);
+      }
       previousReceiveAmount.current = value;
       if (!swapTargetTickerResult && !swapBaseTickerResult) {
         const res = await customAxios.get(`/coins/${receiveToken}`, {});
@@ -96,12 +98,14 @@ const Exchange: React.FC = () => {
         const secondValue = receiveTargetTickerResult
           ? chosenAmount * receiveTargetTickerResult?.last
           : chosenAmount / receiveBaseTickerResult?.last;
-        swapToReceive
-          ? setReceiveAmount(secondValue)
-          : setSwapAmount(secondValue);
-        swapToReceive
-          ? (previousReceiveAmount.current = secondValue)
-          : (previousSwapAmount.current = secondValue);
+        if (secondValue) {
+          swapToReceive
+            ? setReceiveAmount(secondValue)
+            : setSwapAmount(secondValue);
+          swapToReceive
+            ? (previousReceiveAmount.current = secondValue)
+            : (previousSwapAmount.current = secondValue);
+        }
       }
     }
     SetLoading(false);
