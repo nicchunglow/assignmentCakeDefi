@@ -93,7 +93,6 @@ const Exchange: React.FC = () => {
         const secondValue = receiveTargetTickerResult
           ? chosenAmount * receiveTargetTickerResult?.last
           : chosenAmount / receiveBaseTickerResult?.last;
-        console.log('secondValue', secondValue);
         swapToReceive
           ? setReceiveAmount(secondValue)
           : setSwapAmount(secondValue);
