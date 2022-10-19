@@ -16,7 +16,7 @@ const Exchange: React.FC = () => {
   const swapInputCondition = swapAmount !== previousSwapAmount.current;
   const receiveInputCondition = receiveAmount !== previousReceiveAmount.current;
   const disableInputCondition = !swapToken || !receiveToken;
-
+  const conversionPrice = (receiveAmount / swapAmount).toFixed(2);
   const swapTokenOnChange = (event: any) => {
     setSwapToken(event.target.value);
   };
@@ -138,10 +138,10 @@ const Exchange: React.FC = () => {
           </span>
         </span>
       )}
-      <div className="flex flex-col mt-8 w-full items-center">
+      <div className="flex flex-col mt-8 w-full h-full items-center">
         <h1 aria-label="exchange-header-text">La Coco Crypto Exchange</h1>
         <DateAndTime />
-        <span className="flex justify-around w-full h-full">
+        <div className="flex justify-around w-full h-2/4">
           <span className="flex flex-col items-center justify-around bg-primary-300 w-5/12 h-4/5 rounded-lg mt-8">
             <h2 aria-label="swap-token-text">Token to swap</h2>
             <Select
@@ -178,7 +178,15 @@ const Exchange: React.FC = () => {
               onChange={receiveInputOnChange}
             />
           </span>
-        </span>
+        </div>
+        {conversionPrice && (
+          <h2
+            aria-label="conversion-price"
+            className="h-1/6 w-4/5 flex justify-center"
+          >
+            1 {swapToken} = {conversionPrice} {receiveToken}
+          </h2>
+        )}
       </div>
     </div>
   );

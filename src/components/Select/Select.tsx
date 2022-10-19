@@ -27,7 +27,7 @@ const SelectToken: React.FC<SelectTokenType> = (props) => {
   });
   return (
     <select
-      className="border-2 rounded-lg hover:border-secondary-100 w-4/5"
+      className="border-2 rounded-lg hover:border-secondary-100 w-4/5 text-lg"
       aria-label={`${action}-token-select`}
       name={`${action}-token-select`}
       onChange={onChange}
