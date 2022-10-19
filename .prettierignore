@@ -1,0 +1,9 @@
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+**/.husky
+**/public
+**/reportWebVitals.ts
+**/src/setupTests.ts
+**/src/*.css
