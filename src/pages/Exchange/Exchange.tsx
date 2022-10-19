@@ -73,61 +73,65 @@ const Exchange: React.FC = () => {
 
   const getCoinData = async (swapToReceive: boolean) => {
     SetLoading(true);
-    if (swapInputCondition || receiveInputCondition) {
-      const res = await customAxios.get(`/coins/${swapToken}`, {});
-      const tickers = res.data?.tickers;
-      const chosenToken = swapToReceive ? receiveToken : swapToken;
-      const secondaryToken = swapToReceive ? swapToken : receiveToken;
-      const chosenAmount = swapToReceive ? swapAmount : receiveAmount;
-      const swapTargetTickerResult = getTickerResult(
-        true,
-        tickers,
-        chosenToken,
-        secondaryToken,
-      );
-      const swapBaseTickerResult = getTickerResult(
-        false,
-        tickers,
-        chosenToken,
-        secondaryToken,
-      );
-      const value = swapTargetTickerResult
-        ? chosenAmount * swapTargetTickerResult?.last
-        : chosenAmount / swapBaseTickerResult?.last;
-      if (value) {
-        swapToReceive ? setReceiveAmount(value) : setSwapAmount(value);
-        swapToReceive
-          ? (previousReceiveAmount.current = value)
-          : (previousSwapAmount.current = value);
-      }
-      previousReceiveAmount.current = value;
-      if (!swapTargetTickerResult && !swapBaseTickerResult) {
-        const res = await customAxios.get(`/coins/${receiveToken}`, {});
+    try {
+      if (swapInputCondition || receiveInputCondition) {
+        const res = await customAxios.get(`/coins/${swapToken}`, {});
         const tickers = res.data?.tickers;
-        const receiveTargetTickerResult = getTickerResult(
+        const chosenToken = swapToReceive ? receiveToken : swapToken;
+        const secondaryToken = swapToReceive ? swapToken : receiveToken;
+        const chosenAmount = swapToReceive ? swapAmount : receiveAmount;
+        const swapTargetTickerResult = getTickerResult(
           true,
           tickers,
           chosenToken,
           secondaryToken,
         );
-        const receiveBaseTickerResult = getTickerResult(
+        const swapBaseTickerResult = getTickerResult(
           false,
           tickers,
           chosenToken,
           secondaryToken,
         );
-        const secondValue = receiveTargetTickerResult
-          ? chosenAmount * receiveTargetTickerResult?.last
-          : chosenAmount / receiveBaseTickerResult?.last;
-        if (secondValue) {
+        const value = swapTargetTickerResult
+          ? chosenAmount * swapTargetTickerResult?.last
+          : chosenAmount / swapBaseTickerResult?.last;
+        if (value) {
+          swapToReceive ? setReceiveAmount(value) : setSwapAmount(value);
           swapToReceive
-            ? setReceiveAmount(secondValue)
-            : setSwapAmount(secondValue);
-          swapToReceive
-            ? (previousReceiveAmount.current = secondValue)
-            : (previousSwapAmount.current = secondValue);
+            ? (previousReceiveAmount.current = value)
+            : (previousSwapAmount.current = value);
+        }
+        previousReceiveAmount.current = value;
+        if (!swapTargetTickerResult && !swapBaseTickerResult) {
+          const res = await customAxios.get(`/coins/${receiveToken}`, {});
+          const tickers = res.data?.tickers;
+          const receiveTargetTickerResult = getTickerResult(
+            true,
+            tickers,
+            chosenToken,
+            secondaryToken,
+          );
+          const receiveBaseTickerResult = getTickerResult(
+            false,
+            tickers,
+            chosenToken,
+            secondaryToken,
+          );
+          const secondValue = receiveTargetTickerResult
+            ? chosenAmount * receiveTargetTickerResult?.last
+            : chosenAmount / receiveBaseTickerResult?.last;
+          if (secondValue) {
+            swapToReceive
+              ? setReceiveAmount(secondValue)
+              : setSwapAmount(secondValue);
+            swapToReceive
+              ? (previousReceiveAmount.current = secondValue)
+              : (previousSwapAmount.current = secondValue);
+          }
         }
       }
+    } catch (err: any) {
+      throw new Error(err.message);
     }
     SetLoading(false);
   };
