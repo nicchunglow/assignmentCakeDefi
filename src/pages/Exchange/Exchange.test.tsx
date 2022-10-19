@@ -343,7 +343,7 @@ describe('Exchange', () => {
     });
   });
   describe('Conversion Price', () => {
-    test('should show conversion text after both amount are available, and with 2 decimal placing', async () => {
+    test('should show conversion text after both amount are available, and with 5 decimal placing', async () => {
       const swapTokenValue = 'bitcoin';
       const receiveTokenValue = 'ethereum';
       mock.onGet(`/coins/${swapTokenValue}`).reply(200, {
@@ -373,7 +373,7 @@ describe('Exchange', () => {
         const ConversionPrice = screen.getByLabelText('conversion-price');
         expect(ConversionPrice).toBeInTheDocument();
         expect(ReceiveInput).toHaveValue('20');
-        expect(ConversionPrice).toHaveTextContent('1BTC = 10.00ETH');
+        expect(ConversionPrice).toHaveTextContent('1BTC = 10.00000ETH');
       });
     });
     test('should not show conversion text if both amount are not available', async () => {
