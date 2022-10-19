@@ -145,11 +145,11 @@ const Exchange: React.FC = () => {
   }, [receiveAmount, receiveToken]);
 
   return (
-    <div className="flex justify-center rounded-lg w-2/4 h-3/4 shadow-2xl">
+    <div className="flex justify-center rounded-lg w-full sm:w-3/4 lg:w-2/4 h-full lg:h-5/6 bg-white shadow-2xl">
       {loading && (
         <span
           aria-label="loading-screen"
-          className="z-100 fixed w-2/4 h-4/5 bg-gray-300 bg-opacity-80 rounded-lg"
+          className="z-100 fixed top-0 w-full h-full bg-gray-300 bg-opacity-80 rounded-lg"
         >
           <span className="flex justify-center items-center h-full animate-spin">
             <RiLoader4Line
@@ -159,13 +159,13 @@ const Exchange: React.FC = () => {
           </span>
         </span>
       )}
-      <div className="flex flex-col mt-8 w-full h-full items-center">
-        <h1 aria-label="exchange-header-text" className="text-3xl">
+      <div className="flex flex-col mt-8 w-full items-center">
+        <h1 aria-label="exchange-header-text" className="text-2xl sm:text-3xl">
           La Coco Crypto Exchange
         </h1>
         <DateAndTime />
-        <div className="flex justify-around w-full h-2/4">
-          <span className="flex flex-col items-center justify-around shadow-2xl bg-primary-200 w-5/12 h-4/5 rounded-lg mt-8">
+        <div className="flex justify-around flex-wrap w-full lg:h-4/6">
+          <span className="flex flex-col items-center justify-around shadow-2xl bg-primary-200 w-80 lg:w-60  h-60 lg:h-4/5 rounded-lg mt-8">
             <h2 aria-label="swap-token-text">Token to swap</h2>
             <Select
               aria-label="swap-token-select"
@@ -184,7 +184,7 @@ const Exchange: React.FC = () => {
               value={swapAmount}
             />
           </span>
-          <span className="flex flex-col items-center justify-around shadow-2xl bg-primary-200 w-5/12 h-4/5 rounded-lg mt-8">
+          <span className="flex flex-col items-center justify-around shadow-2xl bg-primary-200 w-80 lg:w-60 h-60 lg:h-4/5 rounded-lg mt-8">
             <h2 aria-label="receive-token-text">Token to Receive</h2>
             <Select
               aria-label="receive-token-select"
@@ -204,12 +204,12 @@ const Exchange: React.FC = () => {
             />
           </span>
         </div>
-        <span className="flex flex-col w-full items-center">
+        <span className="flex flex-col w-full mt-10 items-center">
           <button
             aria-label="swap-button"
             onClick={handleSwapButton}
             disabled={!conversionPrice}
-            className="rounded-lg h-14 w-2/5 disabled:bg-gray-100 disabled:text-gray-300 bg-secondary-300 hover:bg-secondary-200 active:bg-secondary-100 text-white text-lg font-thin"
+            className="rounded-lg h-14 w-60 disabled:bg-gray-100 disabled:text-gray-300 bg-secondary-300 hover:bg-secondary-200 active:bg-secondary-100 text-white text-lg font-thin"
           >
             SWAP
           </button>
