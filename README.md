@@ -103,11 +103,7 @@ $ npm install
 
 & add .env to project with the following:
 
-```
-
 REACT_APP_API_BASEURL='https://api.coingecko.com/api/v3'
-
-```
 
 $ npm start
 
