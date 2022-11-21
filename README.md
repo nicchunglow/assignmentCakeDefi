@@ -22,7 +22,36 @@
 
 #### Introduction
 
-This project was build on React, written in Typescript, designed with Tailwindcss, using coinGecko api as backend
+User Acceptance Criteria
+Mr. Ernesto needs your help to create an app that will serve as his online exchange. The app can be on any platform (e.g, Mobile, Web or Desktop). The goal of this app is to be able to display the conversion amount for each token.
+
+If User A wants to swap 1 BTC to ETH, it should display the corresponding ETH to be received. (e.g, 1 BTC = 16.47 ETH).
+
+The app should do the following:
+
+* Display his store name and current date/time - La Coco Crypto Exchange
+* Should support these cryptocurrencies - BTC, ETH, USDT, DFI, DOGE
+* Should have two input fields
+Input #1 - Token to swap
+Input #2 - Token to receive
+
+* On change of input #1 or input #2, both fields should recalculate. Meaning, if I change input 1, input 2 will display the amount to receive. If I change input 2, input 1 will display the amount I need.
+
+* Both inputs should be able to switch to other currency
+Should not be able to select on same currency on both fields
+
+* Bonus:
+Prices should be displayed (e.g, 1 BTC = 16.47 ETH)
+Should have a swap button. When clicked, it will reverse the currencies. (e.g, BTC => ETH, Press swap, ETH => BTC)
+
+Use crypto prices from
+[https://www.coingecko.com/en/api/documentation](https://www.coingecko.com/en/api/documentation)
+Please provide a documentation on how to test and run your application.
+Design of the app is up to you. Design should be responsive.
+
+*Bonus:*
+Unit or E2E tests
+
 
 The goal of the backend was to do :
 
